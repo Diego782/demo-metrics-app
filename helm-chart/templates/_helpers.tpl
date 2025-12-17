@@ -42,6 +42,14 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "demo-metrics-rollout.name" -}}
+{{ .Chart.Name }}
+{{- end }}
+
+{{- define "demo-metrics-rollout.fullname" -}}
+{{ printf "%s" .Release.Name }}
+{{- end }}
+
 {{/*
 Selector labels
 */}}
