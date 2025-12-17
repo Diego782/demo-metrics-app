@@ -11,7 +11,7 @@ spec:
       failureLimit: 1
       provider:
         prometheus:
-          address: http://prometheus-operated.monitoring.svc.cluster.local:9090
+          address: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
           query: |
             sum(rate(http_requests_total{status="500"}[1m]))
             /
