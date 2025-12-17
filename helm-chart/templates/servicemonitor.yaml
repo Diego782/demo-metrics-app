@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: rollout-demo
+  namespace: argo-rollouts
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: rollout-demo
+  namespaceSelector:
+    matchNames:
+      - argo-rollouts
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
