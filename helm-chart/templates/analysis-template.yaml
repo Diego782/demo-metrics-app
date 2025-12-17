@@ -1,18 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: {{ include "demo-metrics-rollout.fullname" . }}-error-rate
+  name: rollout-demo-error-rate
+  namespace: argo-rollouts
 spec:
   metrics:
     - name: http-5xx-rate
       interval: 30s
       count: 3
-      successCondition: result < {{ .Values.analysis.errorRateThreshold }}
-      failureLimit: 1
+      successCondition: result < 0.05
       provider:
         prometheus:
           address: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
           query: |
-            sum(rate(http_requests_total{status="500"}[1m]))
-            /
-            sum(rate(http_requests_total[1m]))
+            scalar(
+              sum(rate(http_requests_total{status=~"5.."}[1m]))
+              /
+              sum(rate(http_requests_total[1m]))
+            )
