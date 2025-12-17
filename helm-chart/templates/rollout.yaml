@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ include "demo-metrics-rollout.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "demo-metrics-rollout.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "demo-metrics-rollout.name" . }}
+    spec:
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+  strategy:
+    canary:
+      steps:
+        {{- range .Values.rollout.canary.steps }}
+        - setWeight: {{ .weight }}
+        {{- if $.Values.analysis.enabled }}
+        - analysis:
+            templates:
+              - templateName: {{ include "demo-metrics-rollout.fullname" $ }}-error-rate
+        {{- end }}
+        {{- end }}

@@ -1,0 +1,19 @@
+{{- if .Values.analysis.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: {{ include "demo-metrics-rollout.fullname" . }}-error-rate
+spec:
+  metrics:
+    - name: http-5xx-rate
+      interval: 30s
+      successCondition: result < {{ .Values.analysis.errorRateThreshold }}
+      failureLimit: 1
+      provider:
+        prometheus:
+          address: http://prometheus-operated.monitoring.svc.cluster.local:9090
+          query: |
+            sum(rate(http_requests_total{status="500"}[1m]))
+            /
+            sum(rate(http_requests_total[1m]))
+{{- end }}
