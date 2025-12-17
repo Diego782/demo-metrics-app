@@ -2,7 +2,7 @@ replicaCount: 4
 
 image:
   repository: 694310032079.dkr.ecr.us-east-2.amazonaws.com/prueba-core
-  tag: latest
+  tag: v1
 
 service:
   port: 80
