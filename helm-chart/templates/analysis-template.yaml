@@ -7,9 +7,9 @@ spec:
   metrics:
     - name: http-5xx-rate
       initialDelay: 60s
-      failureLimit: 3
+      failureLimit: 2
       interval: 15s
-      count: 5
+      count: 3
       successCondition: result < 0.05 || isNaN(result)
       provider:
         prometheus:
