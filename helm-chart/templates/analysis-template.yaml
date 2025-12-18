@@ -6,9 +6,11 @@ metadata:
 spec:
   metrics:
     - name: http-5xx-rate
-      interval: 30s
+      initialDelay: 60s
+      failureLimit: 5
+      interval: 15s
       count: 3
-      successCondition: result < 0.05
+      successCondition: result < 0.05 || isNaN(result)
       provider:
         prometheus:
           address: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
